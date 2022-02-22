@@ -1,6 +1,8 @@
 package stepdefinition;
 
+import io.cucumber.core.gherkin.Step;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Scenario;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -12,6 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import util.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class stepdefs {
     WebDriver driver;
     PropertyReader reader =  PropertyReader.getInstance();
+    GifAssembler assembler = new GifAssembler();
 
     @Given("^user navigates to \"([^\"]*)\"$")
     public void user_navigates_to(String url){
@@ -48,12 +52,14 @@ public class stepdefs {
     }
 
     @After
-    public void after(Scenario scenario) throws InterruptedException {
-        if(scenario.isFailed()) {
-            TakesScreenshot screenshot = (TakesScreenshot)driver;
-            byte img[]=screenshot.getScreenshotAs(OutputType.BYTES);
-            scenario.attach(img,"image/jpeg","Screenshot");
-        }
+    public void after(Scenario scenario) throws InterruptedException, IOException {
+        // if(scenario.isFailed()) {
+        TakesScreenshot screenshot = (TakesScreenshot)driver;
+        byte img[]=screenshot.getScreenshotAs(OutputType.BYTES);
+        byte[] animation = assembler.generate();
+        //scenario.attach(img,"image/jpeg","Screenshot");
+        scenario.attach(animation, "image/gif","Record");
+        // }
         if(driver!=null){
             PageObjectManager.clearObjectAfterScenario(driver);
             driver.quit();
@@ -65,6 +71,12 @@ public class stepdefs {
     @Then("user click on {string} on {string}")
     public void userClickOnOn(String elementName, String pageName) {
         ActionClass.clickOnElement(driver,pageName,elementName);
+    }
+
+    @And("validate element displayed {string} on {string}")
+    public void displayelement(String elementName, String pageName) {
+        WebElement element = PageObjectManager.getWebElement(driver,pageName,elementName);
+        Assert.assertTrue(element.isDisplayed(),"Element is not displayed");
     }
 
     @Then("wait for {string} on {string}")
@@ -139,5 +151,13 @@ public class stepdefs {
 
         if(!incorrectfound.isEmpty())
             Assert.fail("Incorrect Suggestion provided :: "+incorrectfound.toString());
+    }
+
+    @AfterStep
+    public void afterstep(Scenario scenario){
+        String details = scenario.getName();
+        TakesScreenshot screenshot = (TakesScreenshot)driver;
+        byte img[]=screenshot.getScreenshotAs(OutputType.BYTES);
+        assembler.addFrame(details, img);
     }
 }
