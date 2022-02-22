@@ -6,7 +6,6 @@
 
     @HomePage @Test-1
     Scenario: Validate top Panel on Home page
-
       Then validate title as "Amazon.com. Spend less. Smile more."
       And validate "deliver_location" has text "United Kingdom" on "HomePage"
       And validate list of "menubar_titles" has value as "Today's Deals,Customer Service,Registry,Gift Cards,Sell" on "HomePage"
@@ -25,10 +24,25 @@
         | Canada  |
         | China   |
         | Belgium |
+        | Afghanistan|
+        | Mexico     |
+        | Japan      |
+        | Singapore1  |
+        | Singapore2  |
+        | American Samoa|
+        | Angola        |
 
     @HomePage @Test-3 #FailureTestcase
-    Scenario: Validate Amazon Payment Products
+    Scenario Outline: Validate Amazon Payment Products
       Then scroll in to view "footer" on "HomePage"
-      And validate list of "AmazonPaymentProducts" has value as "Amazon Business Card" on "HomePage"
-      And validate list of "AmazonPaymentProducts" has value as "Amazon Pay" on "HomePage"
-      And validate list of "AmazonPaymentProducts" has value as "Amazon Gift Card" on "HomePage"
+      And validate list of "<Locator>" has value as "<product1>" on "HomePage"
+      And validate list of "<Locator>" has value as "<failproduct2>" on "HomePage"
+      And validate list of "<Locator>" has value as "<product3>" on "HomePage"
+      Examples:
+        |Locator              |product1            |failproduct2          |product3        |
+        |AmazonPaymentProducts|Amazon Business Card|Amazon Pay            |Amazon Gift Card|
+
+
+    @HomePage @Test-4 #FailureTestcase
+    Scenario: Validate Amazon Cart
+      Then user click on "cart" on "HomePage"

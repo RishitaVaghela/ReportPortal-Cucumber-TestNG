@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -7,17 +8,14 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.pagefactory.AjaxElementLocatorFactory;
 import org.openqa.selenium.support.pagefactory.ElementLocatorFactory;
 import org.openqa.selenium.support.ui.LoadableComponent;
-import org.testng.Assert;
 import util.WebDriverWaitFactory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class HomePage extends LoadableComponent<HomePage> {
+public class FlipkartHomePage extends LoadableComponent<FlipkartHomePage> {
     WebDriver driver=null;
     boolean isPageLoaded = false;
-    public HomePage(WebDriver driver) {
+    public FlipkartHomePage(WebDriver driver) {
         this.driver = driver;
         ElementLocatorFactory finder = new AjaxElementLocatorFactory(driver,120);
         PageFactory.initElements(finder, this);
@@ -26,39 +24,30 @@ public class HomePage extends LoadableComponent<HomePage> {
     @Override
     protected void load() {
         WebDriverWaitFactory.waitForpageLoad(driver,120);
+
     }
 
     @Override
     protected void isLoaded() throws Error {
         isPageLoaded = true;
+        if(WebDriverWaitFactory.waitForElement(driver,By.xpath("//button[@class='_2KpZ6l _2doB4z']"),30))
+            driver.findElement(By.xpath("//button[@class='_2KpZ6l _2doB4z']")).click();
     }
 
-    @FindBy(id="glow-ingress-line2")
-    WebElement deliver_location;
-
-    @FindBy(id="nav-global-location-popover-link")
-    WebElement select_deliver_location;
-
-    @FindBy(css="#nav-xshop>a:not(.nav-hidden-aria)")
+    @FindBy(css=".eFQ30H .xtXmba")
     List<WebElement>menubar_titles;
 
-    @FindBy(css = ".a-popover-wrapper #a-popover-header-1")
-    WebElement choose_your_Loction_popup;
-
-    @FindBy(css = ".a-popover.a-dropdown .a-lgtbox-vertical-scroll .a-nostyle.a-list-link a")
-    List<WebElement> location;
-
-    @FindBy(id = "GLUXCountryValue")
-    WebElement countryOption;
-
-    @FindBy(xpath = "//button[text()='Done']")
-    WebElement done;
-
-    @FindBy(css = ".navFooterVerticalRow.navAccessibility")
+    @FindBy(css = "._2WErco.row")
     WebElement footer;
 
-    @FindBy(xpath = "//div[text()='Amazon Payment Products']/following-sibling::ul//a")
-    List<WebElement> AmazonPaymentProducts;
+    @FindBy(xpath = "//div[text()='POLICY']/following-sibling::a")
+    List<WebElement> PolicyProducts;
+
+    @FindBy(xpath = "//div[text()='ABOUT']/following-sibling::a")
+    List<WebElement> AboutProducts;
+
+    @FindBy(xpath = "//div[text()='HELP']/following-sibling::a")
+    List<WebElement> HelpProducts;
 
     @FindBy(id = "twotabsearchtextbox")
     WebElement search;

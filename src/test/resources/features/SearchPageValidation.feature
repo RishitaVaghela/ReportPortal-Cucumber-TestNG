@@ -29,6 +29,12 @@ Feature: Test Scenarios for Search Page Validation
     | ha   |
     | han  |
     | cycle|
+    | headphone|
+    | iphone   |
+    | charger  |
+    | fire stick|
+    | blanket    |
+    | prime      |
 
   @Search @Test-4
   Scenario Outline: Select department and Enter search characters and it should display suggestion based on entered characters
@@ -40,3 +46,10 @@ Feature: Test Scenarios for Search Page Validation
       | chetan| Books        |
       | chetan| Kindle Store |
       | dell  | Computers    |
+      | prime | Arts & Crafts|
+      | jacket| Boys' Fashion|
+      | today | Deals |
+      | pan   |Home & Kitchen |
+      |battery|Automotive     |
+      |sugar pencil|Beauty &  Personal Care|
+      |usb         |Electronics            |

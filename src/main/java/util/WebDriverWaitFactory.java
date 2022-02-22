@@ -43,9 +43,25 @@ public class WebDriverWaitFactory {
 
     public static boolean waitForElement(WebDriver driver, WebElement element, int maxWait) {
         boolean statusOfElementToBeReturned = false;
-        WebDriverWait wait = new WebDriverWait(driver, maxWait);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(maxWait));
         try {
             WebElement waitElement = wait.until(ExpectedConditions.visibilityOf(element));
+            if (waitElement.isDisplayed() && waitElement.isEnabled()) {
+                statusOfElementToBeReturned = true;
+                log.info("Element is displayed:: " + element.toString());
+            }
+        } catch (Exception ex) {
+            statusOfElementToBeReturned = false;
+            log.info("Unable to find a element ");
+        }
+        return statusOfElementToBeReturned;
+    }
+
+    public static boolean waitForElement(WebDriver driver, By element, int maxWait) {
+        boolean statusOfElementToBeReturned = false;
+        WebDriverWait wait = new WebDriverWait(driver, maxWait);
+        try {
+            WebElement waitElement = wait.until(ExpectedConditions.visibilityOfElementLocated(element));
             if (waitElement.isDisplayed() && waitElement.isEnabled()) {
                 statusOfElementToBeReturned = true;
                 log.info("Element is displayed:: " + element.toString());
